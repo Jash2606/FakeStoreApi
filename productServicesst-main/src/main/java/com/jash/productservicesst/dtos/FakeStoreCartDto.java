@@ -12,11 +12,5 @@ public class FakeStoreCartDto {
         private String id;
         private String userId;
         private String date;
-//        private products products;
         private List<Products> products;
-//        FakeStoreCartDto(CartProducts cartProducts ){
-//            this.cartProducts = cartProducts;
-//        }
-//    }
-
 }
