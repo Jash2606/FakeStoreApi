@@ -1,6 +1,7 @@
 package com.jash.productservicesst.services;
 
 import com.jash.productservicesst.dtos.FakeStoreProductDto;
+import com.jash.productservicesst.exceptions.ProductNotFoundException;
 import com.jash.productservicesst.models.Category;
 import com.jash.productservicesst.models.Product;
 import org.springframework.stereotype.Component;
@@ -10,21 +11,24 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component   // make an object during start of object..
+@Component   // it will make an object during start of object..
 
 public class FakeStoreProductService implements ProductService{
 
     @Override
     public Product getProductById(Long id) {
 
-        throw new RuntimeException();
-//        RestTemplate restTemplate = new RestTemplate();
-//        FakeStoreProductDto fakeStoreProductDto =  restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
-//                FakeStoreProductDto.class);
-//
-//        // convert FakestoreDto object to product object
-//        Product product = convertFakeStoreDtosToProduct(fakeStoreProductDto);
-//        return product;
+        RestTemplate restTemplate = new RestTemplate();
+        FakeStoreProductDto fakeStoreProductDto =
+                restTemplate.getForObject("https://fakestoreapi.com/products/" + id,
+                        FakeStoreProductDto.class);
+
+        if (fakeStoreProductDto == null) {
+            throw new ProductNotFoundException(id, "Please pass a valid productId");
+        }
+
+        //convert FakeStoreProductDto object to Product object.
+        return convertFakeStoreDtosToProduct(fakeStoreProductDto);
     }
 
     public List<Product> getAllProducts(){
@@ -49,5 +53,10 @@ public class FakeStoreProductService implements ProductService{
         category.setTitle(fakeStoreProductDto.getCategory());
         product.setCategory(category);
         return product;
+    }
+
+    @Override
+    public Product createProduct(Product product) {
+        return null;
     }
 }
